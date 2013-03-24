@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+	<ui:composition template="/WEB-INF/templates/template.xhtml">
+			<ui:define name="rotative">
+				<h:form>
+					<fieldset>
+					<legend>${msg.registerNewOne}</legend>
+					<h:panelGrid columns="3">
+						<h:outputLabel value="#{msg.advantagedNumber}" for="number"/>
+						<h:inputText id="number" 
+							value="#{AccountLoginBean.advantaged.advantagedAccountNumer}" 
+							maxlength="10" required="true" requiredMessage="#{msg.requiredField}">
+						
+							<f:validator  validatorId="advantagedAccountNumberValidator"/>
+						</h:inputText>					
+						<h:message for="number" style="color : red"/>
+					
+						<h:outputLabel value="#{msg.advantagedDesc}" for="description" />
+						<h:inputText id="description" value="#{AccountLoginBean.advantaged.description}" 
+							maxlength="20" required="true" requiredMessage="#{msg.requiredField}"/>
+						<h:message for="description" style="color : red"/>	
+						
+						<h:commandButton action="#{AccountLoginBean.doSaveAdvantaged}" value="#{msg.ok}" styleClass="buttons"/>
+					</h:panelGrid>
+					</fieldset>
+					
+				</h:form>
+					
+				<h:form>
+					<h:dataTable value="#{AccountLoginBean.account.lsAdvantagedAccount}"
+						var="list"
+						styleClass="table"
+						headerClass="table-header"
+						rowClasses="table-even-row table-odd-row">
+						
+						<h:column>
+							<f:facet name="header">${msg.tDescription}</f:facet>
+							#{list.description}
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">${msg.tNumber}</f:facet>
+							#{list.advantagedAccountNumer}
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">${msg.tUpdate}</f:facet>
+							<h:commandLink value="#{msg.tUpdate}" action="advantaged">
+								<f:setPropertyActionListener value="#{list.advantagedAccountNumer}" 
+								target="#{AccountLoginBean.advantaged.advantagedAccountNumer}" />
+								
+								<f:setPropertyActionListener value="#{list.description}" 
+								target="#{AccountLoginBean.advantaged.description}" />
+							</h:commandLink>
+						</h:column>
+												
+						<h:column>
+							<f:facet name="header">${msg.tDelete}</f:facet>
+							<h:commandLink value="#{msg.tDelete}" action="#{AccountLoginBean.doDeleteAdvantaged}">
+								<f:setPropertyActionListener value="#{list.idAdvantagedAccount}" 
+								target="#{AccountLoginBean.advantaged.idAdvantagedAccount}" />
+							</h:commandLink>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">${msg.tSelect}</f:facet>
+							<h:commandLink action="transfer" value="#{msg.tSelect}" >
+								<f:setPropertyActionListener value="#{list.advantagedAccountNumer}" 
+								target="#{transfer.advantaged.advantagedAccountNumer}" />
+								<f:setPropertyActionListener value="#{list.idAdvantagedAccount}"
+								 target="#{transfer.advantaged.idAdvantagedAccount}" />
+							</h:commandLink>
+						</h:column>
+					</h:dataTable>
+				</h:form>		
+			</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+	<ui:composition template="/WEB-INF/templates/template.xhtml">
+			<ui:define name="rotative">
+				<h:form>
+					<fieldset>
+						<legend>${msg.voucher}</legend>
+						<center>
+							<p>${msg.voucher}</p>
+						</center>
+						
+						<h:panelGrid columns="2">
+							<h:outputLabel value="#{msg.clientName} : " />
+							<h:outputText value="#{voucher.clientFullName}"  />
+							<h:outputLabel value="#{msg.discountAccount} : " />
+							<h:outputText value="#{voucher.account.number}" />
+						</h:panelGrid>
+						
+						<p>${msg.transaction} &npsp; : &nbsp;
+						<h:outputText value=" #{msg.payment}" rendered="#{voucher.payment}"/>
+						<h:outputText value=" #{msg.transfer}" rendered="#{not voucher.payment}"/> 
+						</p>
+						
+						<h:panelGrid columns="2">
+						
+							<h:outputLabel value="#{msg.key} : " />
+							<h:outputText value="#{voucher.key}" />	
+														
+							<h:outputLabel value=" #{msg.amount} : " />
+							<h:outputText value="#{voucher.transaction.amount}">
+								<f:convertNumber type="currency" currencySymbol="R$"/>
+							</h:outputText>
+							
+							<h:outputLabel value="#{msg.execDate} : " rendered="#{voucher.transaction.executeDate != null}"/>
+							<h:outputText value="#{voucher.transaction.executeDate}" rendered="#{voucher.transaction.executeDate != null}">
+								<f:convertDateTime type="both" timeZone="America/Sao_Paulo" dateStyle="full"/>
+							</h:outputText>		
+								
+							<h:outputLabel value="#{msg.scheduleDate} : " rendered="#{voucher.transaction.scheduleDate != null}"/>
+							<h:outputText value="#{voucher.transaction.scheduleDate}" rendered="#{voucher.transaction.scheduleDate != null}">
+								<f:convertDateTime type="both" timeZone="America/Sao_Paulo" dateStyle="full"/>
+							</h:outputText>
+															
+						</h:panelGrid>
+					</fieldset>
+				</h:form>
+			</ui:define>	
+	</ui:composition>
+
+</html>
