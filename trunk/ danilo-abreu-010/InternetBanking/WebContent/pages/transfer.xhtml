@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:composition template="/WEB-INF/templates/template.xhtml">
+		<ui:define name="rotative">
+			<h:panelGrid columns="3">
+				<h:form>
+					<fieldset>
+					<legend>${msg.registerTransfer}</legend>
+					
+					<h:panelGrid columns="3">
+						<h:outputText value="#{msg.whenTransfer}" /> 
+						<h:selectOneRadio value="#{transfer.today}" id="optionExec"
+							required="true" requiredMessage="#{msg.requiredField}">
+							
+							<f:selectItem  itemLabel="#{msg.today}"  itemValue="true"/>
+							<f:selectItem  itemLabel="#{msg.schedule}" itemValue="false"/>
+							<f:ajax event="click" render="@form" />
+						</h:selectOneRadio>
+						
+						<h:message  for="optionExec" styleClass="errorMessage"/>	
+								
+						<h:outputText value="#{msg.advantagedNumber}" />
+						<h:inputText value="#{transfer.transfer.advantageAccount.advantagedAccountNumer}" 
+						required="true" requiredMessage="#{msg.requiredField}" id="advNumber">
+							<f:validator  validatorId="advantagedAccountNumberValidator" />
+						</h:inputText>
+						<h:message  for="advNumber" styleClass="errorMessage"/>	
+						
+						<h:outputText value="#{msg.amount}" />
+						<h:inputText value="#{transfer.transaction.amount}"
+						required="true" requiredMessage="#{msg.requiredField}" id="amount">
+							<f:convertNumber locale="#{lang.userLocale}"/>
+							<f:validateDoubleRange maximum="#{transfer.account.balance}"  minimum="10"/>
+						</h:inputText>
+						<h:message  for="amount" styleClass="errorMessage"/>
+						
+						<h:outputText value="#{msg.scheduleDate}"  rendered="#{not transfer.today}"/>
+						<h:inputText value="#{transfer.transaction.scheduleDate}" rendered="#{not transfer.today}"
+							styleClass="dateClass" id="scheduleDate"
+							converterMessage="#{msg.dateConvertMessage}" 
+							required="#{not transfer.today}" requiredMessage="#{msg.requiredField}">
+						 	<f:convertDateTime timeZone="America/Sao_Paulo" locale="#{lang.userLocale}" pattern="#{msg.datePattern}" />		
+						 	<f:validator validatorId="scheduleDateValidator"/>				 	
+						 </h:inputText>
+						<h:message for="scheduleDate" styleClass="errorMessage" rendered="#{not transfer.today}"/>
+
+						<h:outputText value="#{msg.description}" />
+						<h:inputText value="#{transfer.transaction.description}" maxlength="20"
+							required="true" requiredMessage="#{msg.requiredField}" id="description">
+						</h:inputText>
+						<h:message  for="description" styleClass="errorMessage"/>			
+																		
+						<h:outputText value="#{msg.cardPassword}" />
+						<h:inputSecret value="#{transfer.typedCardPassword}"
+						required="true" requiredMessage="#{msg.requiredField}" id="cardPassword"/>		
+						<h:message  for="cardPassword" styleClass="errorMessage"/>
+						 
+						<h:commandButton action="#{transfer.doTransfer}" value="#{msg.ok}" styleClass="buttons">
+							<f:setPropertyActionListener value="#{transfer.transaction}" target="#{voucher.transaction}" />	
+						</h:commandButton>
+						 								
+					</h:panelGrid>
+					
+					</fieldset>
+				</h:form>
+			</h:panelGrid>				
+		</ui:define>
+	</ui:composition>
+</html>

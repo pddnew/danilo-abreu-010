@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+	<ui:composition template="/WEB-INF/templates/template.xhtml">
+			<ui:define name="rotative">
+			
+				<h:outputText value="#{msg.paymentNotAllowed}"  rendered="#{not payment.current}"/>
+				
+				<h:form rendered="#{payment.current}">				
+					<fieldset>
+					<legend>${msg.registerPayment}</legend>
+					
+					<h:panelGrid columns="3">
+						<h:outputText value="#{msg.whenPay}" /> 
+						
+						<h:selectOneRadio value="#{payment.today}" id="optionExec"
+							required="true" requiredMessage="#{msg.requiredField}">
+							
+							<f:selectItem  itemLabel="#{msg.today}"  itemValue="true"/>
+							<f:selectItem  itemLabel="#{msg.schedule}" itemValue="false"/>
+							
+							<f:ajax event="click" render="@form" />
+							
+						</h:selectOneRadio>
+						
+						<h:message  for="optionExec" styleClass="errorMessage"/>	
+								
+						<h:outputText value="#{msg.barCode}" />
+						<h:inputText value="#{payment.bankSlip.barCode}" 
+							required="true" requiredMessage="#{msg.requiredField}" id="barCode"
+							validatorMessage="#{msg.invalidBarCode}"														
+							maxlength="80"	size="60">
+							<!--
+								Regex created and tested using 
+								http://gskinner.com/RegExr/ test and validate 
+							 -->
+							<f:validateRegex pattern="^\d[\d ]*\d$" for="barCode" />							
+							<!-- TODO: Validator -->
+						</h:inputText>
+						<h:message  for="barCode" styleClass="errorMessage"/>	
+						
+						<h:outputText value="#{msg.amount}" />
+						<h:inputText value="#{payment.transaction.amount}"
+							required="true" requiredMessage="#{msg.requiredField}" id="amount">
+							<f:convertNumber locale="#{lang.userLocale}"/>
+							<f:validateDoubleRange maximum="#{payment.account.balance}"  minimum="0.1"/>
+						</h:inputText>
+						<h:message  for="amount" styleClass="errorMessage"/>
+						
+						<h:outputText value="#{msg.expirationDate}" />
+						<h:inputText value="#{payment.bankSlip.expirationDate}" 
+							styleClass="dateClass" id="expirationDate" 
+							converterMessage="#{msg.dateConvertMessage}"
+							required="true" requiredMessage="#{msg.requiredField}" >
+							<f:convertDateTime timeZone="America/Sao_Paulo" locale="#{lang.userLocale}" pattern="#{msg.datePattern}"/>
+							<f:validator validatorId="expirationDateValidator"/>							
+						</h:inputText>
+						<h:message for="expirationDate" styleClass="errorMessage"/>
+						
+						<h:outputText value="#{msg.scheduleDate}"  rendered="#{not payment.today}"/>
+						<h:inputText value="#{payment.transaction.scheduleDate}" rendered="#{not payment.today}"
+							styleClass="dateClass" id="scheduleDate"
+							converterMessage="#{msg.dateConvertMessage}" 
+							required="#{not payment.today}" requiredMessage="#{msg.requiredField}">
+						 	<f:convertDateTime timeZone="America/Sao_Paulo" locale="#{lang.userLocale}" pattern="#{msg.datePattern}" />
+						 	<f:validator validatorId="scheduleDateValidator"/>
+						 </h:inputText>
+						<h:message for="scheduleDate" styleClass="errorMessage" rendered="#{not payment.today}"/>
+														
+						<h:outputText value="#{msg.description}" />
+						<h:inputText value="#{payment.transaction.description}" maxlength="20"
+							required="true" requiredMessage="#{msg.requiredField}" id="description">
+						</h:inputText>
+						<h:message  for="description" styleClass="errorMessage"/>														
+																		
+						<h:outputText value="#{msg.cardPassword}" />
+						<h:inputSecret value="#{payment.typedCardPassword}"
+						required="true" requiredMessage="#{msg.requiredField}" id="cardPassword"/>		
+						<h:message  for="cardPassword" styleClass="errorMessage"/>
+						 
+						 
+						<h:commandButton action="#{payment.doPayment}" value="#{msg.ok}" styleClass="buttons" >
+							<f:setPropertyActionListener value="#{payment.transaction}" target="#{voucher.transaction}" />							
+						</h:commandButton>
+						 								
+					</h:panelGrid>
+					
+					</fieldset>					
+				</h:form>
+			</ui:define>			
+	</ui:composition>
+</html>

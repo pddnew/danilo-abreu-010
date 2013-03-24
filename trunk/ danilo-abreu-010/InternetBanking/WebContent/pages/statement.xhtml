@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+	<ui:composition template="/WEB-INF/templates/template.xhtml">
+			<ui:define name="rotative">
+				<h:form>				
+					
+					<h:panelGrid columns="6">	
+					
+						<h:outputText value="#{msg.sinceDate}" />
+						<h:inputText value="#{statement.sinceDate}" 
+							styleClass="dateClass" id="sinceDate" 
+							converterMessage="#{msg.dateConvertMessage}"
+							required="true" requiredMessage="#{msg.requiredField}" >
+							<f:convertDateTime locale="#{lang.userLocale}" pattern="#{msg.datePattern}" timeZone="America/Sao_Paulo"/>													
+						</h:inputText>
+
+						<h:outputText value="#{msg.toDate}" />
+						<h:inputText value="#{statement.toDate}" 
+							styleClass="dateClass" id="toDate" 
+							converterMessage="#{msg.dateConvertMessage}"
+							required="true" requiredMessage="#{msg.requiredField}" >
+							<f:convertDateTime locale="#{lang.userLocale}" pattern="#{msg.datePattern}" timeZone="America/Sao_Paulo"/>													
+						</h:inputText>
+																							
+						<h:commandButton value="#{msg.ok}" action="#{statement.listAll}"  styleClass="buttons"/>
+						
+					</h:panelGrid>
+					<h:messages  styleClass="errorMessage"/>
+					<div id="rotativeContentTable">
+					
+						<h:dataTable value="#{statement.lsStatement}"
+								var="list"
+								styleClass="table"
+								headerClass="table-header"
+								rowClasses="table-even-row table-odd-row" >
+								
+							<h:column> 
+								<f:facet name="header">${msg.date}</f:facet>							
+									<h:outputText value="#{list.transaction.executeDate}">
+									<f:convertDateTime type="date" timeZone="America/Sao_Paulo" dateStyle="short"/>
+								</h:outputText>							
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">${msg.description}</f:facet>
+								#{list.transaction.description}
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">${msg.amount}</f:facet>
+								<h:outputText value="#{list.transaction.amount}" >
+									<f:convertNumber  type="currency" currencySymbol="R$" locale="#{lang.userLocale}"/>
+								</h:outputText>
+								#{list.inOut}
+							</h:column>
+						</h:dataTable>
+					</div>
+				</h:form>
+			</ui:define>
+	</ui:composition>
+
+</html>

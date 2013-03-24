@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+	   		
+	<head>		
+		<link rel="Stylesheet" href="../css/style-general.css" type="text/css"/>
+		<link rel="short icon" type="image/x-icon" href="/img/ico/favicon.ico"/>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/jquery.mask.min.js"></script>	
+		
+		<script type="text/javascript" >
+			$(document).ready(function(){				
+				$("input.dateClass").mask('00/00/0000');
+			});
+		</script>	
+		<title>${msg.title}</title>
+	</head>
+	
+<body>
+<f:view locale="#{lang.userLocale}">
+	<div id="content-wrapper">
+		<h:form>
+		
+			<div id="lang">
+				<h:commandLink action="#{lang.doViewPortuguese}">
+					${msg.portuguese}					
+				</h:commandLink>
+				&nbsp;&nbsp;
+				<h:commandLink action="#{lang.doViewEnglish}">
+					${msg.english}
+				</h:commandLink>				
+			</div>
+			
+			<div id="logout">
+				<h:commandLink action="#{AccountLoginBean.doLogout }" value="#{msg.logout}"/>
+			</div>
+			
+		</h:form>
+		
+		<div id="accountContent">
+			<div id="menu">	
+				<h:form>
+					<ul>	    
+				        <li><h:commandLink value="#{msg.home}" action="success" /></li>				        
+				        <li><h:commandLink value="#{msg.payment}" action="#{payment.payment}" /></li>
+				        <li><h:commandLink value="#{msg.transfer}" action="#{transfer.transferPage}" /></li>
+				        <li><h:commandLink value="#{msg.voucher}" action="#{vouchers.vouchers}" /></li>
+				        <li><h:commandLink value="#{msg.advantaged}" action="#{AccountLoginBean.doAdvantaged}" /> </li>
+				    </ul>
+				</h:form>
+			</div>
+		
+			<div id="welcome-message">
+				<h:outputFormat value="#{msg.welcomeClient}">
+					<f:param value="#{AccountLoginBean.account.client.firstName}"></f:param>
+				</h:outputFormat>
+			</div>
+			
+			<div id="accountBalance">				
+				${msg.currentBalance} 
+				<h:outputFormat value="#{AccountLoginBean.account.balance}">
+					<f:convertNumber type="currency" currencySymbol="R$"/>
+				</h:outputFormat>
+			</div>
+				
+			<div id="rotativeContent">
+				<ui:insert name="rotative">Rotative Content</ui:insert>
+			</div>
+		</div>		
+	</div>
+</f:view>
+</body>
+		
+</html>
